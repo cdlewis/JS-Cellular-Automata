@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>Conway's Game of Life</title>
+		<script type="text/javascript" src="script/jquery-1.4.3.min.js"></script>
+		<script type="text/javascript" src="script/haskell.js"></script>
+		<script type="text/javascript" src="script/game_of_life.js"></script>
+		<script type="text/javascript" src="script/clock.js"></script>
+		<link rel="stylesheet" type="text/css" href="style/main.css" />
+	</head>
+	<body>
+		<header>
+			<h1>Cellular Automata - Conway's Game of Life</h1>
+		</header>
+		<p>Conway's Game of Life (named after its creator) originated with a problem presented by the mathematician John von Neumann who sought to construct a hypothetical machine that could build copies of itself. Although successful, von Neumann's design was quite complex and so Conway created the Game of Life as a simplification of his solution.</p>
+		<p>The game consists of a 2 dimensional grid of squares. Each square (also known as a cell) can have one of two states - alive or dead. The state of a specific cell is determined by examining the states of the surrounding cells (horizontally, vertically and diagonally).</p>
+		<p>This process of recalculating cell states can continue indefinitely although the resulting interaction between cells will differ based on what states they start at. For each new <em>step</em> (the re-calculation of all cells), the following rules are observed:</p>
+		<ol>
+			<li>Any live cell with fewer than two live neighbours dies, as if caused by under-population.</li>
+			<li>Any live cell with more than three live neighbours dies, as if by overcrowding.</li>
+			<li>Any dead cell with exactly three live neighbours becomes a live cell, as if by reproduction.</li>
+		</ol>
+		<p>Despite the simplicity of the rules, it is possible for some remarkable patterns to emerge if intial states of the cells are set correctly. In fact, they can even be arranged to create a theoretical computer known as a <em>Turing Machine</em>. This makes it equiviliant in power to all modern computers given unlimited memory and no time constraints. Any program could be re-created in the Game of Life by arranging the board correctly.</p>
+		<canvas id="screen"></canvas>
+		<input type="range" min="0" max="500" value="200" step="5" onchange="clock.new_speed(this.value)" />
+		<p>The game pictured above is running in realtime using Javascript to calculate the states and then draw them. The slider can be used to adjust the speed at which new states are calculated. It shows what is known as a "Gosper Glider Gun". Conway originally conjectured that no pattern could grow indefinitely and offered a $50 prize to the first person to prove or disprove it. This was won by Bill Gosper in 1970 who was able to demonstrate that such a machine could exist by building one! The game that he constructed repeatedly shoots out moving objects, and, assuming the size of the board is infinite - the pattern will continue to grow forever as more gliders are created. However, the above implementation <em>does</em> have space constraints it will not grow indefinitely and the collision of gliders will destroy them.</p>
+	</body>
+	<script type="text/javascript">
+		// Create an instance of Grid
+		grid = new Grid( 36, 24, "screen" );
+		
+		// Set initial state of cells
+		var initial_cords = [ [ 24, 0 ], [ 22, 1 ], [ 24, 1 ], [ 12, 2 ], [ 13, 2 ], [ 20, 2 ], [ 21, 2 ], [ 34, 2 ], [ 35, 2 ], [ 11, 3 ], [ 15, 3 ], [ 20, 3 ], [ 21, 3 ], [ 34, 3 ], [ 35, 3 ], [ 0, 4 ], [ 1, 4 ], [ 10, 4 ], [ 16, 4 ], [ 20, 4 ], [ 21, 4 ], [ 0, 5 ], [ 1, 5 ], [ 10, 5 ], [ 14, 5 ], [ 16, 5 ], [ 17, 5 ], [ 22, 5 ], [ 24, 5 ], [ 10, 6 ], [ 16, 6 ], [ 24, 6 ], [ 11, 7 ], [ 15, 7 ], [ 12, 8 ], [ 13, 8 ] ];
+
+		map( initial_cords, function( x ) { grid.set_cell( x[ 0 ], x[ 1 ], "alive" ) } );
+
+		grid.draw(); // Draw the inital state
+		
+		// Setup a clock to control redraw frequency
+		clock = new Clock( "grid.step();", 200 );
+		clock.start();
+	</script>
+</html>
